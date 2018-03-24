@@ -1,0 +1,36 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    -ms-flex-align: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+}
+
+#timer {
+    color: #dc3545;
+}
+
+#choices p {
+    border: 1px solid #46b8da;
+    padding: 10px;
+    background: #5bc0de;
+    color: #ffffff;
+    width: 45%;
+    margin: 3px;
+    display: inline-block;
+}
