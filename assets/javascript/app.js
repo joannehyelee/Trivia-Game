@@ -19,22 +19,25 @@ $(document).ready(function(){
     ];
 
     var interval;
-    var time = 30;
+    var time = 10;
 
     $("#start-button").on("click", function(){
         startGame();
-        $("#timer").html("<h2>30</h2>");
+        $("#timer").html("<h2>10</h2>");
     });
 
     function reset() {
-        time = 30;
-        $("#timer").html("<h2>30</h2>");
+        time = 10;
+        $("#timer").html("<h2>10</h2>");
 
         $("#result").text("");
     }
 
     function startGame() {
         $("#start-button").remove();
+
+        var correctAnswers = 0,
+        incorrectAnswers = 0;
 
         var gameLoop = function(i) {
             if (questions[i]) {
@@ -53,42 +56,63 @@ $(document).ready(function(){
                     $("#choices p").remove();
                     if (this.innerHTML === questions[i].answer) {
                         $("#result").append("<p>" + "CORRECT!" + "</p>");
+                        correctAnswers++;
                     }
                     else {
                         $("#result").append("<p>" + "Sorry... The correct answer was " + "<b>" + questions[i].answer + "</b>" + "</p>");
+                        incorrectAnswers++;
                     }
                     stop();
 
                     setTimeout(function(){
                         gameLoop(i+1);
                         reset();
-                    }, 4000);
+                    }, 3000);
                 });
 
-                setTimeout(function(){
-                    gameLoop(i+1);
-                }, 30000);
-                // Run gameLoop function every 30 seconds
+                function decrementTime() {
 
+                    time--;
+            
+                    $("#timer").html("<h2>" + time + "</h2>");
+            
+                    if (time === 0) {
+                        $("#choices p").remove();
+                        stop();
+                        $("#result").append("<p>" + "Sorry... The correct answer was " + "<b>" + questions[i].answer + "</b>" + "</p>");
+                        incorrectAnswers++;
+
+                        setTimeout(function(){
+                            gameLoop(i+1);
+                            reset();
+                        }, 4000);
+                    }
+                }
                 interval = setInterval(decrementTime, 1000);
-                // This is saying - run decrementTime function every 1 second
+                // Run decrementTime function every 1 second
+            } else {
+                $("#question").html("");
 
+                // Create a div to hold the results
+                var resultsDiv = $("<div>");
+                $("#game-results").append(resultsDiv);
+
+                var correct = $("<p>Correct Answers: " + correctAnswers + "</p>");
+                var incorrect = $("<p>Incorrect Answers: " + incorrectAnswers + "</p>");
+                var doneButton = $("<button class='btn btn-lg btn-danger btn-block'>" + "START OVER" + "</button>");
+
+                $(resultsDiv).append(correct);
+                $(resultsDiv).append(incorrect);
+                $(resultsDiv).append(doneButton);
+
+                $(doneButton).on("click", function(){
+                    startGame();
+                    $(doneButton).remove();
+                    $(resultsDiv).remove();
+                });
             }
         }
         gameLoop(0);
-    }
-
-
-    function decrementTime() {
-
-        time--;
-
-        $("#timer").html("<h2>" + time + "</h2>");
-
-        if (time === 0) {
-            stop();
-            reset();
-        }
     }
 
     function stop() {
